@@ -54,7 +54,16 @@ $service = $serviceModel->getServiceById($booking['service_id']);
                 </div>
                 <div class="voucher">
                     <img src="assets/images/ticket.png" alt="Voucher">
-                    <span>Ví voucher</span>
+                    <div class="dropdown">
+                        <span>Ví voucher</span>
+                        <ul class="dropdown-content">
+                            <li>Infor</li>
+                            <li>Vouchers</li>
+                            <li>
+                                <a class="dropdown-item" href="process/logout.php">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
