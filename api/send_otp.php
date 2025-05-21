@@ -52,6 +52,5 @@ if (!$email_sent) {
 }
 
 echo json_encode([
-    'message' => 'Mã xác nhận đã được gửi đến email của bạn',
-    'debug_code' => $otp_code // Xóa dòng này trong môi trường production
+    'message' => 'Mã xác nhận đã được gửi đến email của bạn'
 ]);

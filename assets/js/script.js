@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Loading overlay
     loadingOverlay: document.getElementById("loading-overlay"),
-  }
+  };
 
   // State
   const state = {
@@ -51,20 +51,20 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedTime: null,
     userId: elements.userIdInput.value || null,
     currentEmail: "",
-  }
+  };
 
   // Initialize
-  init()
+  init();
 
   /**
    * Initialize the application
    */
   function init() {
     // Generate date options
-    generateDateOptions()
+    generateDateOptions();
 
     // Add event listeners
-    addEventListeners()
+    addEventListeners();
   }
 
   /**
@@ -73,26 +73,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function addEventListeners() {
     // Branch selection
     elements.branchRadios.forEach((radio) => {
-      radio.addEventListener("change", handleBranchSelection)
-    })
+      radio.addEventListener("change", handleBranchSelection);
+    });
 
     // Continue buttons
-    elements.continueStep1Button.addEventListener("click", handleContinueStep1)
-    elements.continueStep2Button.addEventListener("click", handleContinueStep2)
+    elements.continueStep1Button.addEventListener("click", handleContinueStep1);
+    elements.continueStep2Button.addEventListener("click", handleContinueStep2);
 
     // Login dialog
-    elements.closeDialogBtn.addEventListener("click", closeLoginDialog)
-    elements.loginButton.addEventListener("click", handleLogin)
-    elements.verifyButton.addEventListener("click", handleVerifyOTP)
-    elements.resendCodeBtn.addEventListener("click", handleResendOTP)
+    elements.closeDialogBtn.addEventListener("click", closeLoginDialog);
+    elements.loginButton.addEventListener("click", handleLogin);
+    elements.verifyButton.addEventListener("click", handleVerifyOTP);
+    elements.resendCodeBtn.addEventListener("click", handleResendOTP);
   }
 
   /**
    * Handle branch selection
    */
   function handleBranchSelection() {
-    state.selectedBranchId = this.value
-    elements.continueStep1Button.disabled = false
+    state.selectedBranchId = this.value;
+    elements.continueStep1Button.disabled = false;
   }
 
   /**
@@ -101,12 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleContinueStep1() {
     if (!state.userId) {
       // User is not logged in, show login dialog
-      showLoginDialog()
+      showLoginDialog();
     } else {
       // User is logged in, proceed to step 2
-      loadServices(state.selectedBranchId)
-      elements.step1.classList.add("hidden")
-      elements.step2.classList.remove("hidden")
+      loadServices(state.selectedBranchId);
+      elements.step1.classList.add("hidden");
+      elements.step2.classList.remove("hidden");
     }
   }
 
@@ -114,47 +114,47 @@ document.addEventListener("DOMContentLoaded", () => {
    * Handle continue button in step 2
    */
   function handleContinueStep2() {
-    elements.step2.classList.add("hidden")
-    elements.step3.classList.remove("hidden")
+    elements.step2.classList.add("hidden");
+    elements.step3.classList.remove("hidden");
   }
 
   /**
    * Show login dialog
    */
   function showLoginDialog() {
-    elements.loginDialog.classList.remove("hidden")
+    elements.loginDialog.classList.remove("hidden");
   }
 
   /**
    * Close login dialog
    */
   function closeLoginDialog() {
-    elements.loginDialog.classList.add("hidden")
+    elements.loginDialog.classList.add("hidden");
 
     // Reset dialog state
-    elements.emailStep.classList.remove("hidden")
-    elements.verificationStep.classList.add("hidden")
-    elements.userEmailInput.value = ""
-    elements.userNameInput.value = ""
-    elements.verificationCodeInput.value = ""
+    elements.emailStep.classList.remove("hidden");
+    elements.verificationStep.classList.add("hidden");
+    elements.userEmailInput.value = "";
+    elements.userNameInput.value = "";
+    elements.verificationCodeInput.value = "";
   }
 
   /**
    * Handle login button click
    */
   function handleLogin() {
-    const email = elements.userEmailInput.value.trim()
+    const email = elements.userEmailInput.value.trim();
 
     if (email) {
       if (!validateEmail(email)) {
-        showAlert("Vui lòng nhập email hợp lệ")
-        return
+        showAlert("Vui lòng nhập email hợp lệ");
+        return;
       }
 
-      state.currentEmail = email
-      checkUserExists(email)
+      state.currentEmail = email;
+      checkUserExists(email);
     } else {
-      showAlert("Vui lòng nhập email")
+      showAlert("Vui lòng nhập email");
     }
   }
 
@@ -162,12 +162,12 @@ document.addEventListener("DOMContentLoaded", () => {
    * Handle verify OTP button click
    */
   function handleVerifyOTP() {
-    const code = elements.verificationCodeInput.value.trim()
+    const code = elements.verificationCodeInput.value.trim();
 
     if (code && code.length === 6) {
-      verifyOTP(code, state.currentEmail)
+      verifyOTP(code, state.currentEmail);
     } else {
-      showAlert("Vui lòng nhập mã xác nhận 6 số")
+      showAlert("Vui lòng nhập mã xác nhận 6 số");
     }
   }
 
@@ -176,8 +176,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {Event} e - Click event
    */
   function handleResendOTP(e) {
-    e.preventDefault()
-    sendOTP(state.currentEmail)
+    e.preventDefault();
+    sendOTP(state.currentEmail);
   }
 
   /**
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} email - User email
    */
   function checkUserExists(email) {
-    showLoading()
+    showLoading();
 
     fetch("api/check_user.php", {
       method: "POST",
@@ -198,33 +198,33 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        hideLoading()
+        hideLoading();
 
         if (data.error) {
-          showAlert(data.error)
-          return
+          showAlert(data.error);
+          return;
         }
 
         if (data.exists) {
           // User exists, proceed with login
-          state.userId = data.user.id
-          elements.userIdInput.value = state.userId
-          elements.loginDialog.classList.add("hidden")
+          state.userId = data.user.id;
+          elements.userIdInput.value = state.userId;
+          elements.loginDialog.classList.add("hidden");
 
           // Load services for selected branch
-          loadServices(state.selectedBranchId)
-          elements.step1.classList.add("hidden")
-          elements.step2.classList.remove("hidden")
+          loadServices(state.selectedBranchId);
+          elements.step1.classList.add("hidden");
+          elements.step2.classList.remove("hidden");
         } else {
           // User doesn't exist, send OTP for registration
-          sendOTP(email)
+          sendOTP(email);
         }
       })
       .catch((error) => {
-        hideLoading()
-        console.error("Error:", error)
-        showAlert("Đã xảy ra lỗi khi kiểm tra tài khoản. Vui lòng thử lại.")
-      })
+        hideLoading();
+        console.error("Error:", error);
+        showAlert("Đã xảy ra lỗi khi kiểm tra tài khoản. Vui lòng thử lại.");
+      });
   }
 
   /**
@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} email - User email
    */
   function sendOTP(email) {
-    showLoading()
+    showLoading();
 
     fetch("api/send_otp.php", {
       method: "POST",
@@ -243,30 +243,37 @@ document.addEventListener("DOMContentLoaded", () => {
         email: email,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
-        hideLoading()
+        hideLoading();
 
         if (data.error) {
-          showAlert(data.error)
-          return
+          showAlert(data.error);
+          return;
         }
 
         // Show verification step
-        elements.emailStep.classList.add("hidden")
-        elements.verificationStep.classList.remove("hidden")
+        elements.emailStep.classList.add("hidden");
+        elements.verificationStep.classList.remove("hidden");
 
         // For development purposes, show the code
-        if (data.debug_code) {
-          console.log("Mã xác nhận:", data.debug_code)
-          showAlert("Mã xác nhận của bạn là: " + data.debug_code)
-        }
+        // if (data.debug_code) {
+        //   console.log("Mã xác nhận:", data.debug_code)
+        //   showAlert("Mã xác nhận của bạn là: " + data.debug_code)
+        // }
       })
       .catch((error) => {
-        hideLoading()
-        console.error("Error:", error)
-        showAlert("Đã xảy ra lỗi khi gửi mã xác nhận. Vui lòng thử lại.")
-      })
+        hideLoading();
+        console.error("Error:", error);
+        showAlert("Đã xảy ra lỗi khi gửi mã xác nhận. Vui lòng thử lại.");
+      });
   }
 
   /**
@@ -275,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} email - User email
    */
   function verifyOTP(code, email) {
-    showLoading()
+    showLoading();
 
     fetch("api/verify_otp.php", {
       method: "POST",
@@ -290,31 +297,31 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        hideLoading()
+        hideLoading();
 
         if (data.error) {
-          showAlert(data.error)
-          return
+          showAlert(data.error);
+          return;
         }
 
-        state.userId = data.id
-        elements.userIdInput.value = state.userId
-        elements.loginDialog.classList.add("hidden")
+        state.userId = data.id;
+        elements.userIdInput.value = state.userId;
+        elements.loginDialog.classList.add("hidden");
 
         // Reset dialog state
-        elements.emailStep.classList.remove("hidden")
-        elements.verificationStep.classList.add("hidden")
+        elements.emailStep.classList.remove("hidden");
+        elements.verificationStep.classList.add("hidden");
 
         // Load services for selected branch
-        loadServices(state.selectedBranchId)
-        elements.step1.classList.add("hidden")
-        elements.step2.classList.remove("hidden")
+        loadServices(state.selectedBranchId);
+        elements.step1.classList.add("hidden");
+        elements.step2.classList.remove("hidden");
       })
       .catch((error) => {
-        hideLoading()
-        console.error("Error:", error)
-        showAlert("Đã xảy ra lỗi khi xác nhận mã. Vui lòng thử lại.")
-      })
+        hideLoading();
+        console.error("Error:", error);
+        showAlert("Đã xảy ra lỗi khi xác nhận mã. Vui lòng thử lại.");
+      });
   }
 
   /**
@@ -322,25 +329,25 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} branchId - Branch ID
    */
   function loadServices(branchId) {
-    showLoading()
+    showLoading();
 
     fetch(`api/get_services.php?branch_id=${branchId}`)
       .then((response) => response.json())
       .then((services) => {
-        hideLoading()
+        hideLoading();
 
         if (services.error) {
-          showAlert(services.error)
-          return
+          showAlert(services.error);
+          return;
         }
 
-        renderServices(services)
+        renderServices(services);
       })
       .catch((error) => {
-        hideLoading()
-        console.error("Error:", error)
-        showAlert("Đã xảy ra lỗi khi tải dịch vụ. Vui lòng thử lại.")
-      })
+        hideLoading();
+        console.error("Error:", error);
+        showAlert("Đã xảy ra lỗi khi tải dịch vụ. Vui lòng thử lại.");
+      });
   }
 
   /**
@@ -348,96 +355,112 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {Array} services - List of services
    */
   function renderServices(services) {
-    elements.servicesContainer.innerHTML = ""
+    elements.servicesContainer.innerHTML = "";
 
     services.forEach((service) => {
-      const serviceItem = document.createElement("div")
-      serviceItem.className = "service-item"
+      const serviceItem = document.createElement("div");
+      serviceItem.className = "service-item";
       serviceItem.innerHTML = `
-        <input type="radio" name="service_id" id="service-${service.id}" value="${service.id}" class="service-radio">
+        <input type="radio" name="service_id" id="service-${
+          service.id
+        }" value="${service.id}" class="service-radio">
         <div class="service-details">
-            <label for="service-${service.id}" class="service-name">${service.name}</label>
-            ${service.description ? `<p class="service-description">${service.description}</p>` : ""}
+            <label for="service-${service.id}" class="service-name">${
+        service.name
+      }</label>
+            ${
+              service.description
+                ? `<p class="service-description">${service.description}</p>`
+                : ""
+            }
             <div class="service-meta">
-                <span class="service-price">${formatPrice(service.price)}đ</span>
+                <span class="service-price">${formatPrice(
+                  service.price
+                )}đ</span>
                 <span class="service-duration">${service.duration} phút</span>
             </div>
         </div>
-      `
-      elements.servicesContainer.appendChild(serviceItem)
+      `;
+      elements.servicesContainer.appendChild(serviceItem);
 
       // Add event listener to service radio
-      const serviceRadio = serviceItem.querySelector(".service-radio")
+      const serviceRadio = serviceItem.querySelector(".service-radio");
       serviceRadio.addEventListener("change", function () {
-        state.selectedServiceId = this.value
-        elements.serviceIdInput.value = state.selectedServiceId
-        elements.continueStep2Button.disabled = false
-      })
-    })
+        state.selectedServiceId = this.value;
+        elements.serviceIdInput.value = state.selectedServiceId;
+        elements.continueStep2Button.disabled = false;
+      });
+    });
   }
 
   /**
    * Generate date options for the next two weeks
    */
   function generateDateOptions() {
-    elements.dateList.innerHTML = ""
+    elements.dateList.innerHTML = "";
 
-    const dates = getNextTwoWeeksDates()
+    const dates = getNextTwoWeeksDates();
     dates.forEach((date) => {
-      const dateItem = document.createElement("div")
-      dateItem.className = "date-item"
+      const dateItem = document.createElement("div");
+      dateItem.className = "date-item";
       dateItem.innerHTML = `
         <input type="radio" name="booking_date" id="date-${date.value}" value="${date.value}" class="date-radio">
         <label for="date-${date.value}" class="date-label-text">${date.label}</label>
-      `
-      elements.dateList.appendChild(dateItem)
+      `;
+      elements.dateList.appendChild(dateItem);
 
       // Add event listener to date radio
-      const dateRadio = dateItem.querySelector(".date-radio")
+      const dateRadio = dateItem.querySelector(".date-radio");
       dateRadio.addEventListener("change", function () {
-        state.selectedDate = this.value
-        elements.bookingDateInput.value = state.selectedDate
-        elements.timeSelection.classList.remove("hidden")
-        generateTimeOptions()
-        updateBookButton()
-      })
-    })
+        state.selectedDate = this.value;
+        elements.bookingDateInput.value = state.selectedDate;
+        elements.timeSelection.classList.remove("hidden");
+        generateTimeOptions();
+        updateBookButton();
+      });
+    });
   }
 
   /**
    * Generate time options for the selected date
    */
   function generateTimeOptions() {
-    elements.timeList.innerHTML = ""
+    elements.timeList.innerHTML = "";
 
-    const times = getAvailableTimes()
+    const times = getAvailableTimes();
     times.forEach((time) => {
-      const timeItem = document.createElement("div")
-      timeItem.className = "time-item"
+      const timeItem = document.createElement("div");
+      timeItem.className = "time-item";
       timeItem.innerHTML = `
         <input type="radio" name="booking_time" id="time-${time.value}" value="${time.value}" class="time-radio">
         <label for="time-${time.value}" class="time-label-text">${time.label}</label>
-      `
-      elements.timeList.appendChild(timeItem)
+      `;
+      elements.timeList.appendChild(timeItem);
 
       // Add event listener to time radio
-      const timeRadio = timeItem.querySelector(".time-radio")
+      const timeRadio = timeItem.querySelector(".time-radio");
       timeRadio.addEventListener("change", function () {
-        state.selectedTime = this.value
-        elements.bookingTimeInput.value = state.selectedTime
-        updateBookButton()
-      })
-    })
+        state.selectedTime = this.value;
+        elements.bookingTimeInput.value = state.selectedTime;
+        updateBookButton();
+      });
+    });
   }
 
   /**
    * Update book button state
    */
   function updateBookButton() {
-    if (state.userId && state.selectedBranchId && state.selectedServiceId && state.selectedDate && state.selectedTime) {
-      elements.bookButton.disabled = false
+    if (
+      state.userId &&
+      state.selectedBranchId &&
+      state.selectedServiceId &&
+      state.selectedDate &&
+      state.selectedTime
+    ) {
+      elements.bookButton.disabled = false;
     } else {
-      elements.bookButton.disabled = true
+      elements.bookButton.disabled = true;
     }
   }
 
@@ -446,20 +469,20 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {Array} List of dates
    */
   function getNextTwoWeeksDates() {
-    const dates = []
-    const today = new Date()
+    const dates = [];
+    const today = new Date();
 
     for (let i = 0; i < 14; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
 
-      const value = formatDate(date)
-      const label = formatDateLabel(date)
+      const value = formatDate(date);
+      const label = formatDateLabel(date);
 
-      dates.push({ value, label })
+      dates.push({ value, label });
     }
 
-    return dates
+    return dates;
   }
 
   /**
@@ -467,37 +490,37 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {Array} List of times
    */
   function getAvailableTimes() {
-    const times = []
-    const start = 9 // 9AM
-    const end = 19 // 7PM
+    const times = [];
+    const start = 9; // 9AM
+    const end = 19; // 7PM
 
     for (let hour = start; hour < end; hour++) {
       times.push({
         value: `${padZero(hour)}:00`,
         label: `${hour}:00`,
-      })
+      });
 
       times.push({
         value: `${padZero(hour)}:30`,
         label: `${hour}:30`,
-      })
+      });
     }
 
-    return times
+    return times;
   }
 
   /**
    * Show loading overlay
    */
   function showLoading() {
-    elements.loadingOverlay.classList.remove("hidden")
+    elements.loadingOverlay.classList.remove("hidden");
   }
 
   /**
    * Hide loading overlay
    */
   function hideLoading() {
-    elements.loadingOverlay.classList.add("hidden")
+    elements.loadingOverlay.classList.add("hidden");
   }
 
   /**
@@ -505,7 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} message - Alert message
    */
   function showAlert(message) {
-    alert(message)
+    alert(message);
   }
 
   /**
@@ -514,8 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {boolean} Validation result
    */
   function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return regex.test(email)
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
   }
 
   /**
@@ -524,11 +547,11 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {string} Formatted date
    */
   function formatDate(date) {
-    const year = date.getFullYear()
-    const month = padZero(date.getMonth() + 1)
-    const day = padZero(date.getDate())
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1);
+    const day = padZero(date.getDate());
 
-    return `${year}-${month}-${day}`
+    return `${year}-${month}-${day}`;
   }
 
   /**
@@ -537,12 +560,20 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {string} Formatted date label
    */
   function formatDateLabel(date) {
-    const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"]
-    const dayName = dayNames[date.getDay()]
-    const day = padZero(date.getDate())
-    const month = padZero(date.getMonth() + 1)
+    const dayNames = [
+      "Chủ Nhật",
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy",
+    ];
+    const dayName = dayNames[date.getDay()];
+    const day = padZero(date.getDate());
+    const month = padZero(date.getMonth() + 1);
 
-    return `${dayName}, ${day}/${month}`
+    return `${dayName}, ${day}/${month}`;
   }
 
   /**
@@ -551,7 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {string} Padded number
    */
   function padZero(num) {
-    return num.toString().padStart(2, "0")
+    return num.toString().padStart(2, "0");
   }
 
   /**
@@ -560,6 +591,6 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {string} Formatted price
    */
   function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
-})
+});

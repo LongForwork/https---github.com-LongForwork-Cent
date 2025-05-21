@@ -1,6 +1,9 @@
 <?php
-require_once 'config/config.php';
+require_once __DIR__. '/../config/config.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
+require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * Gửi email với mã OTP
  * 
@@ -9,6 +12,7 @@ require_once 'config/config.php';
  * @return bool Trạng thái gửi email
  */
 function sendEmail($email, $otp_code) {
+    $mail = new PHPMailer(true);
     // Cấu hình email
     $subject = "Mã xác nhận đặt lịch - Cent Beauty";
     $message = createEmailTemplate($otp_code);
@@ -20,6 +24,29 @@ function sendEmail($email, $otp_code) {
 
     // Trong môi trường thực tế, bạn nên sử dụng thư viện PHPMailer hoặc dịch vụ email
     // Ví dụ với PHPMailer:
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'centbeauty.booking@gmail.com';
+        $mail->Password   = 'lzgo swgj sylk hbyo';
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+    
+        // Người gửi và người nhận
+        $mail->setFrom('centbeauty.booking@gmail.com', 'Cent Beauty');
+        $mail->addAddress($email, 'Recipient Name');
+    
+        // Nội dung email
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $message;
+    
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Không thể gửi email. Lỗi: {$mail->ErrorInfo}";
+    }
+    
     /*
     require 'vendor/autoload.php';
     
@@ -41,7 +68,7 @@ function sendEmail($email, $otp_code) {
     */
 
     // Sử dụng hàm mail() của PHP (cần cấu hình SMTP trên server)
-    $mail_sent = mail($email, $subject, $message, $headers);
+    // $mail_sent = mail($email, $subject, $message, $headers);
     
     // Ghi log
     error_log("Email to $email: OTP Code $otp_code");
