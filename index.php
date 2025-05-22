@@ -47,12 +47,11 @@ if (isset($_GET['error'])) {
                     <div class="brand-sub">beauty</div>
                     <div class="brand-main">cent'</div>
                 </div>
-                <div id="flag-logged-in">
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="voucher">
                     <img src="assets/images/ticket.png" alt="Voucher">
                     <div class="dropdown">
-                        <span><?php echo $_SESSION['email']; ?></span>
+                        <span>Ví voucher</span>
                         <ul class="dropdown-content">
                             <li>Infor</li>
                             <li>Vouchers</li>
@@ -63,7 +62,6 @@ if (isset($_GET['error'])) {
                     </div>
                 </div>
                 <?php endif; ?> 
-                </div>
             </div>
 
             <!-- Progress -->
@@ -202,21 +200,4 @@ if (isset($_GET['error'])) {
 
     <script src="assets/js/script.js"></script>
 </body>
-
-<!-- node flag logged in -->
-<div data-name="flag-logged-in" class="hidden">
-    <div class="voucher">
-        <img src="assets/images/ticket.png" alt="Voucher">
-        <div class="dropdown">
-            <span data-name="email"></span>
-            <ul class="dropdown-content">
-                <li>Infor</li>
-                <li>Vouchers</li>
-                <li>
-                    <a class="dropdown-item" href="process/logout.php">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 </html>
