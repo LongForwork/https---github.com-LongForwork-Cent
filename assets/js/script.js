@@ -215,6 +215,14 @@ document.addEventListener("DOMContentLoaded", () => {
           loadServices(state.selectedBranchId);
           elements.step1.classList.add("hidden");
           elements.step2.classList.remove("hidden");
+          const cloneNodeFlagLoggedIn = document
+            .querySelector("[data-name='flag-logged-in']")
+            .cloneNode(true);
+          cloneNodeFlagLoggedIn.classList.remove("hidden");
+          cloneNodeFlagLoggedIn.querySelector("[data-name='email']").textContent =
+            email;
+          const flagLoggedIn = document.querySelector("#flag-logged-in");
+          flagLoggedIn.innerHTML = cloneNodeFlagLoggedIn.innerHTML;
         } else {
           // User doesn't exist, send OTP for registration
           sendOTP(email);
